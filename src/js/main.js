@@ -1,1 +1,1 @@
-document.write(require('./dependency.js'));
+document.body.innerText = require('./dependency.js');
