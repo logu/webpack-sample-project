@@ -62,5 +62,9 @@ resource is being downloaded since the stylesheet will block the rendering of th
 be useful to render the initial "loading page" while the JS would be loaded assynchronously. An
 alternative would be to use inline styles for the initial page for the parts that must look nice
 until the JS resource download is finished, in which case the separate CSS generation could be
-skipped if desired.
+skipped if desired;
+- It's possible to decide on whether to embed an image or not based on its size in webpack. This
+project loads PNG with less than 50K embedded in the CSS. Otherwise a hashed image is generated
+and a link to it is used instead. For testing this one should either comment the `publicPath`
+setting or symlinking dist/assets to dist/ (`cd dist && ln -s . assets`);
 - TODO: compile a list of more differences after I finish my research

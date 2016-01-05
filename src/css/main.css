@@ -1,1 +1,1 @@
-body {background: yellow;}
+body { background: yellow url(../images/sample.png); background-repeat: no-repeat; }

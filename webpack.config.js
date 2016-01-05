@@ -21,7 +21,6 @@ plugins.push(function(){
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 suffix = PROD ? '-[hash]' : ''
 plugins.push(new ExtractTextPlugin('[name]' + suffix + '.css'));
-//plugins.push(new ExtractTextPlugin('app.css'));
 
 
 module.exports = {
@@ -34,7 +33,6 @@ module.exports = {
         publicPath: 'assets/',
         path: './dist',
         filename: PROD ? '[name]-[hash].min.js' : '[name].js'
-        //filename: '[name].js'
     }
     ,module: {
         loaders: [
@@ -43,6 +41,7 @@ module.exports = {
               //loader: 'style!css'
             }
           , { test: /\.coffee$/, loader: 'coffee-loader' }
+          , { test: /\.png$/, loader: 'url-loader?mimetype=image/png&limit=50000'}
         ]
     }
     , devtool: 'source-map'
