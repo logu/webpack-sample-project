@@ -34,6 +34,10 @@ module.exports = {
         path: './dist',
         filename: PROD ? '[name]-[hash].min.js' : '[name].js'
     }
+    ,resolveLoader: {
+      alias: { 'ko-loader': __dirname + '/loaders/ko-loader'
+      }
+    }
     ,module: {
         loaders: [
             { test: /\.css$/,
@@ -42,6 +46,7 @@ module.exports = {
             }
           , { test: /\.coffee$/, loader: 'coffee-loader' }
           , { test: /\.png$/, loader: 'url-loader?mimetype=image/png&limit=50000'}
+          , { test: /knockout-latest\.debug\.js$/, loader: 'ko-loader'}
         ]
     }
     , devtool: 'source-map'
