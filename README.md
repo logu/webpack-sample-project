@@ -67,4 +67,6 @@ skipped if desired;
 project loads PNG with less than 50K embedded in the CSS. Otherwise a hashed image is generated
 and a link to it is used instead. For testing this one should either comment the `publicPath`
 setting or symlinking dist/assets to dist/ (`cd dist && ln -s . assets`);
+- Great flexibility for pre and post processing with more control over vendor libraries. In this
+project a custom loader was used to instruct Knockout.js how to check for jQuery availability;
 - TODO: compile a list of more differences after I finish my research
