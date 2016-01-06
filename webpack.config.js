@@ -40,12 +40,14 @@ module.exports = {
     }
     ,module: {
         loaders: [
-            { test: /\.css$/,
-              loader: ExtractTextPlugin.extract("style-loader", "css-loader")
-              //loader: 'style!css'
-            }
-          , { test: /\.coffee$/, loader: 'coffee-loader' }
-          , { test: /\.png$/, loader: 'url-loader?mimetype=image/png&limit=50000'}
+          { test: /\.scss$/,
+            loader: ExtractTextPlugin.extract('style', 'css?sourceMap!sass?sourceMap') }
+            //loader: ['style', 'css?sourceMap', 'sass?sourceMap'] }
+          ,
+          { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') }
+            //loader: 'style!css'
+          , { test: /\.coffee$/, loader: 'coffee' }
+          , { test: /\.png$/, loader: 'url?mimetype=image/png&limit=50000'}
           , { test: /knockout-latest\.debug\.js$/, loader: 'ko-loader'}
         ]
     }
