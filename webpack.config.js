@@ -26,6 +26,9 @@ plugins.push(new ExtractTextPlugin('[name]' + suffix + '.css'));
 var SMAPS = true;
 var smSuffix = SMAPS ? '?sourceMap' : ''; //'?-minimize&-autoprefixer';
 
+//var USE_MINIFIED_VENDORS = false;
+var USE_MINIFIED_VENDORS = true;
+
 module.exports = {
     entry:
     { main: './src/js/main'
@@ -61,3 +64,9 @@ module.exports = {
     , plugins: plugins
     , cache: true // speed up watch mode (in-memory caching only)
 };
+
+if (USE_MINIFIED_VENDORS) module.exports.resolve = {
+  alias: { 'jquery': __dirname + '/node_modules/jquery/dist/jquery.min.js'
+    ,'knockout': __dirname + '/node_modules/knockout/build/output/knockout-latest.js'
+  }
+}
