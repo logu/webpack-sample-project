@@ -22,6 +22,9 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 suffix = PROD ? '-[hash]' : ''
 plugins.push(new ExtractTextPlugin('[name]' + suffix + '.css'));
 
+//var SMAPS = false;
+var SMAPS = true;
+var smSuffix = SMAPS ? '?sourceMap' : ''; //'?-minimize&-autoprefixer';
 
 module.exports = {
     entry:
@@ -39,18 +42,22 @@ module.exports = {
       }
     }
     ,module: {
-        loaders: [
-          { test: /\.scss$/,
-            loader: ExtractTextPlugin.extract('style', 'css?sourceMap!sass?sourceMap') }
-            //loader: ['style', 'css?sourceMap', 'sass?sourceMap'] }
-          ,
-          { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') }
-            //loader: 'style!css'
-          , { test: /\.coffee$/, loader: 'coffee' }
-          , { test: /\.png$/, loader: 'url?mimetype=image/png&limit=50000'}
-          , { test: /knockout-latest\.debug\.js$/, loader: 'ko-loader'}
-        ]
+      noParse: [ 'jquery'
+        , 'jquery-ui'
+      ]
+      ,loaders: [
+        { test: /\.scss$/,
+          loader: ExtractTextPlugin.extract('style', 'css' + smSuffix + '!sass' + smSuffix) }
+          //loader: ['style', 'css' + smSuffix, 'sass' + smSuffix] }
+        ,
+        { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css' + smSuffix) }
+          //loader: 'style!css'
+        , { test: /\.coffee$/, loader: 'coffee' }
+        , { test: /\.png$/, loader: 'url?mimetype=image/png&limit=50000'}
+        , { test: /knockout-latest\.debug\.js$/, loader: 'ko-loader'}
+      ]
     }
-    , devtool: 'source-map'
+    , devtool: SMAPS ? 'source-map' : ''
     , plugins: plugins
+    , cache: true // speed up watch mode (in-memory caching only)
 };
