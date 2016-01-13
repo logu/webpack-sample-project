@@ -1,15 +1,18 @@
 var webpack = require('webpack');
+//var ConcatSource = require("webpack-sources").ConcatSource;
+
 var PROD = JSON.parse(process.env.PROD || '0');
 var fs = require('fs');
 var AssetsPlugin = require('assets-webpack-plugin');
 var plugins = [ new AssetsPlugin() ];
-if (PROD) plugins.push(new webpack.optimize.UglifyJsPlugin({minimize: true }));
-//  , exclude: /(\.min|knockout-latest)\.js/
 plugins.push(function(){
   this.plugin('done', function(stats){
     var data = fs.readFileSync('index.html.tmpl', 'utf8');
     var appPath = PROD ? 'dist/main-' + stats.hash + '.min.js' : 'dist/app.js';
     var rendered = data.replace('APP_RESOURCE_JS_PATH', appPath);
+    var vendorPath = PROD ? 'dist/vendor-' + stats.hash + '.min.js' :
+      'dist/vendor.js';
+    var rendered = rendered.replace('VENDOR_RESOURCE_JS_PATH', vendorPath);
     ['a', 'b'].forEach(function(theme){
       var cssPath = PROD ? 'dist/theme-' + theme + '-' + stats.hash + '.css' :
         'dist/theme-' + theme + '.css';
@@ -30,9 +33,13 @@ var smSuffix = SMAPS ? '?sourceMap' : ''; //'?-minimize&-autoprefixer';
 //var USE_MINIFIED_VENDORS = false;
 var USE_MINIFIED_VENDORS = true;
 
+//var SPLIT_VENDORS = false;
+var SPLIT_VENDORS = true;
+
 module.exports = {
   entry:
-  { main: './src/js/main'
+  { main: './src/js/main.js'
+    , admin: './src/js/admin.js'
     , 'theme-a': './src/css/theme-a.js'
     , 'theme-b': './src/css/theme-b.js'
   }
@@ -67,7 +74,58 @@ module.exports = {
 };
 
 if (USE_MINIFIED_VENDORS) module.exports.resolve = {
-  alias: { 'jquery': __dirname + '/node_modules/jquery/dist/jquery.min.js'
-    ,'knockout': __dirname + '/node_modules/knockout/build/output/knockout-latest.js'
+  alias: { jquery: __dirname + '/node_modules/jquery/dist/jquery.min.js'
+    , knockout: __dirname + '/node_modules/knockout/build/output/knockout-latest.js'
   }
-}
+};
+
+if (SPLIT_VENDORS) {
+  module.exports.entry.vendor = ['jquery'
+    , 'knockout'
+    , 'jquery-ui/ui/widgets/dialog'
+    , './src/js/vendors-loaded.coffee'
+  ];
+  vendorSuffix = suffix;
+  if (PROD) vendorSuffix += '.min';
+  plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'vendor'
+    , filename: 'vendor' + vendorSuffix + '.js'
+    , minChunks: Infinity
+  }));
+};
+
+plugins.push(function(){
+  /*
+  this.plugin('this-compilation', function(compilation) {
+    function LoaderTemplate(){ }
+    LoaderTemplate.prototype.apply = function(chunkTemplate) {
+      chunkTemplate.plugin('render', function(modules, chunk){
+        console.log('render', modules, chunk)
+        var source = new ConcatSource();
+        source.add('//added by me');
+        source.add(modules);
+        source.add('//finished by me');
+        return source;
+      });
+    }
+    compilation.chunkTemplate.apply(new LoaderTemplate());
+  });
+  */
+  this.plugin('after-compile', function(compilation, callback){
+    for (var file in compilation.assets) if (/\.js$/.test(file) && !(/^vendor/.test(file))) {
+      var children = compilation.assets[file].children;
+      if (!children) continue;
+      console.log('preparing ' + file + ' for async loading.');
+      var source = children[0];
+      /*
+      var loaderPre = ';(function(){var check = function(){if (!window.webpackJsonp) {setTimeout(check, 10); return;}'
+      var loaderPost = '}; check();})();'
+      source._value = loaderPre + source._value + loaderPost;
+      */
+      source._value = source._value.replace(/^webpackJsonp/, 'webpackJsonx');
+    }
+    callback();
+  });
+});
+
+if (PROD) plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true
+  , compress: { warnings: false } }));
