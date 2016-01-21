@@ -124,6 +124,7 @@ plugins.push(function(){
   */
   this.plugin('after-compile', function(compilation, callback){
     for (var file in compilation.assets) if (/\.js$/.test(file) && !(/^vendor/.test(file))) {
+      if (/^(\d+\.)/.test(file)) continue;
       var children = compilation.assets[file].children;
       if (!children) continue;
       console.log('preparing ' + file + ' for async loading.');
