@@ -37,15 +37,15 @@ var USE_MINIFIED_VENDORS = true;
 var SPLIT_VENDORS = true;
 
 module.exports = {
-  entry:
-  { main: './src/js/main.js'
-    , admin: './src/js/admin.js'
-    , 'theme-a': './src/css/theme-a.js'
-    , 'theme-b': './src/css/theme-b.js'
+  context: __dirname + '/src'
+  ,entry: { main: './js/main.js'
+    , admin: './js/admin.js'
+    , 'theme-a': './css/theme-a.js'
+    , 'theme-b': './css/theme-b.js'
   }
   ,output: {
     publicPath: 'assets/'
-    , path: './dist'
+    , path: __dirname + '/dist'
     , filename: PROD ? '[name]-[hash].min.js' : '[name].js'
   }
   ,resolveLoader: {
@@ -63,6 +63,7 @@ module.exports = {
       , { test: /\.coffee$/, loader: 'coffee' }
       , { test: /\.png$/, loader: 'url?mimetype=image/png&limit=50000'}
       , { test: /knockout-latest\.debug\.js$/, loader: 'ko-loader'}
+      , { test: /\.eco$/, loader: 'eco-loader' }
     ]
   }
   , devtool: SMAPS ? 'source-map' : ''
@@ -83,7 +84,7 @@ if (SPLIT_VENDORS) {
   module.exports.entry.vendor = ['jquery'
     , 'knockout'
     , 'jquery-ui/ui/widgets/dialog'
-    , './src/js/vendors-loaded.coffee'
+    , './js/vendors-loaded.coffee'
   ];
   vendorSuffix = suffix;
   if (PROD) vendorSuffix += '.min';
