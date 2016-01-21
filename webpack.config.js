@@ -4,7 +4,12 @@ var webpack = require('webpack');
 var PROD = JSON.parse(process.env.PROD || '0');
 var fs = require('fs');
 var AssetsPlugin = require('assets-webpack-plugin');
-var plugins = [ new AssetsPlugin() ];
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var plugins = [ new AssetsPlugin()
+  , new CleanWebpackPlugin(['dist'], {
+      root: __dirname, verbose: true, dry: false
+  })
+];
 plugins.push(function(){
   this.plugin('done', function(stats){
     var data = fs.readFileSync('index.html.tmpl', 'utf8');
