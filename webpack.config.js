@@ -36,6 +36,9 @@ var USE_MINIFIED_VENDORS = true;
 //var SPLIT_VENDORS = false;
 var SPLIT_VENDORS = true;
 
+var UNSAFE_CACHE = false;
+//var UNSAFE_CACHE = true;
+
 module.exports = {
   context: __dirname + '/src'
   ,entry: { main: './js/main.js'
@@ -72,13 +75,15 @@ module.exports = {
   , noParse: [ 'jquery'
     , 'jquery-ui'
   ]
+  , resolve: {}
 };
 
-if (USE_MINIFIED_VENDORS) module.exports.resolve = {
-  alias: { jquery: __dirname + '/node_modules/jquery/dist/jquery.min.js'
-    , knockout: __dirname + '/node_modules/knockout/build/output/knockout-latest.js'
-  }
+if (USE_MINIFIED_VENDORS) module.exports.resolve.alias = {
+  jquery: __dirname + '/node_modules/jquery/dist/jquery.min.js'
+  , knockout: __dirname + '/node_modules/knockout/build/output/knockout-latest.js'
 };
+
+if (UNSAFE_CACHE) module.exports.resolve.unsafeCache = true // [/\.js/, ...]
 
 if (SPLIT_VENDORS) {
   module.exports.entry.vendor = ['jquery'
