@@ -13,7 +13,7 @@ var plugins = [ new AssetsPlugin()
 plugins.push(function(){
   this.plugin('done', function(stats){
     var data = fs.readFileSync('index.html.tmpl', 'utf8');
-    var appPath = PROD ? 'dist/main-' + stats.hash + '.min.js' : 'dist/app.js';
+    var appPath = PROD ? 'dist/main-' + stats.hash + '.min.js' : 'dist/main.js';
     var rendered = data.replace('APP_RESOURCE_JS_PATH', appPath);
     var vendorPath = PROD ? 'dist/vendor-' + stats.hash + '.min.js' :
       'dist/vendor.js';
