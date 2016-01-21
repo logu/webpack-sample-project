@@ -84,6 +84,7 @@ if (SPLIT_VENDORS) {
   module.exports.entry.vendor = ['jquery'
     , 'knockout'
     , 'jquery-ui/ui/widgets/dialog'
+    , './js/ie8.js'
     , './js/vendors-loaded.coffee'
   ];
   vendorSuffix = suffix;

@@ -1,3 +1,3 @@
-console.log 'vendor loaded'
+#console.log 'vendor loaded'
 module.exports = ->
-  console.log 'do it'
+  #console.log 'do it'
