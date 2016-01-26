@@ -92,6 +92,7 @@ if (UNSAFE_CACHE) module.exports.resolve.unsafeCache = true // [/\.js/, ...]
 
 if (SPLIT_VENDORS) {
   module.exports.entry.vendor = ['jquery'
+    , 'jquery-ujs'
     , 'knockout'
     , 'jquery-ui/ui/widgets/dialog'
     , './js/ie8.js'
